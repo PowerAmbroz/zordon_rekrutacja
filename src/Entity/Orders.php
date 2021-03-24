@@ -73,6 +73,18 @@ class Orders
         return $this;
     }
 
+
+    public function getInspectionDate(): ?string
+    {
+        return $this->inspectionDate;
+    }
+
+    public function setInspectionDate(string $inspectionDate): self
+    {
+        $this->inspectionDate = $inspectionDate;
+
+        return $this;
+    }
     /**
      * @return Collection|Realestate[]
      */

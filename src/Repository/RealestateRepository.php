@@ -19,6 +19,21 @@ class RealestateRepository extends ServiceEntityRepository
         parent::__construct($registry, Realestate::class);
     }
 
+    public function saveRealestateData($data, $lastOrder){
+
+        $rd = $data['realEstates'];
+
+        foreach ($rd as $realestate){
+            $realestateData = new Realestate();
+            $realestateData->setOrders($lastOrder);
+            $realestateData->setType($realestate['type']);
+            $realestateData->setDescription($realestate['description']);
+
+            $this->_em->persist($realestateData);
+        }
+        $this->_em->flush();
+    }
+
     // /**
     //  * @return Realestate[] Returns an array of Realestate objects
     //  */

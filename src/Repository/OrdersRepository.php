@@ -19,6 +19,20 @@ class OrdersRepository extends ServiceEntityRepository
         parent::__construct($registry, Orders::class);
     }
 
+    public function saveOrderData($data){
+
+        $order = new Orders();
+
+        $order->setAssignee($data['assignee']);
+        $order->setAuthor($data['author']);
+        $order->setInspectionDate($data['inspectionDate']);
+
+        $this->_em->persist($order);
+        $this->_em->flush();
+
+        return $order->getId();
+    }
+
     // /**
     //  * @return Orders[] Returns an array of Orders objects
     //  */
