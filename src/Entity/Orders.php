@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrdersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,9 +35,14 @@ class Orders
     private $inspectionDate;
 
     /**
-     * @ORM\OneToOne(targetEntity=Realestate::class, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Realestate::class, mappedBy="orders")
      */
-    private $realEstate;
+    private $realestate_id;
+
+    public function __construct()
+    {
+        $this->realestate_id = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -66,26 +73,32 @@ class Orders
         return $this;
     }
 
-    public function getInspectionDate(): ?string
+    /**
+     * @return Collection|Realestate[]
+     */
+    public function getRealestateId(): Collection
     {
-        return $this->inspectionDate;
+        return $this->realestate_id;
     }
 
-    public function setInspectionDate(string $inspectionDate): self
+    public function addRealestateId(Realestate $realestateId): self
     {
-        $this->inspectionDate = $inspectionDate;
+        if (!$this->realestate_id->contains($realestateId)) {
+            $this->realestate_id[] = $realestateId;
+            $realestateId->setOrders($this);
+        }
 
         return $this;
     }
 
-    public function getRealEstate(): ?Realestate
+    public function removeRealestateId(Realestate $realestateId): self
     {
-        return $this->realEstate;
-    }
-
-    public function setRealEstate(?Realestate $realEstate): self
-    {
-        $this->realEstate = $realEstate;
+        if ($this->realestate_id->removeElement($realestateId)) {
+            // set the owning side to null (unless already changed)
+            if ($realestateId->getOrders() === $this) {
+                $realestateId->setOrders(null);
+            }
+        }
 
         return $this;
     }
